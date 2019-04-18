@@ -80,3 +80,5 @@ core
 doltcompile
 doltlibtool
 xserver.ent
+
+CMakeLists.txt
