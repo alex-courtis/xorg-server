@@ -52,6 +52,7 @@ typedef struct RawKey {
     const char *desc;
     uint32_t keycode;
     enum Side side;
+    int ignore;
     int pressed;
 } RawKey;
 
@@ -131,6 +132,8 @@ static RawKey squishablekeys[] = {
         {"SLASH",     61, RIGHT},
 };
 
+static FILE *logfile;
+
 void
 XkbTrackModifierState(DeviceEvent *event) {
     for (int i = 0; i < LENGTH(modifierkeys); i++)
@@ -138,14 +141,56 @@ XkbTrackModifierState(DeviceEvent *event) {
             modifierkeys[i].pressed = event->type == ET_KeyPress;
 }
 
+void
+XkbSquishInit(void) {
+    static int init = 0;
+
+    if (init)
+        return;
+
+    char p[PATH_MAX];
+    FILE *f;
+
+    /* ignored modifiers and keys; one per line */
+    snprintf(p, PATH_MAX, "%s/.xkbsquishignore", getenv("HOME"));
+    f = fopen(p, "r");
+    if (f) {
+        char buf[128];
+        char *c;
+        while (fgets(buf, sizeof(buf), f)) {
+            if ((c = strchr(buf, '\n')))
+                *c = '\0';
+            for (int i = 0; i < LENGTH(modifierkeys); i++)
+                if (strcmp(buf, modifierkeys[i].desc) == 0)
+                    modifierkeys[i].ignore = 1;
+            for (int i = 0; i < LENGTH(squishablekeys); i++)
+                if (strcmp(buf, squishablekeys[i].desc) == 0)
+                    squishablekeys[i].ignore = 1;
+        }
+        fclose(f);
+    }
+
+    /* log file per session */
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    snprintf(p, PATH_MAX, "%s/.local/share/xorg/XkbSquish.%04d%02d%02d%02d%02d%02d.log", getenv("HOME"), tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+    logfile = fopen(p, "w");
+
+    init = 1;
+}
+
 Bool
 XkbSquishPressByModifierSide(DeviceEvent *event) {
-    static char buf[1024];
+    XkbSquishInit();
 
+    static unsigned long count = 0;
+
+    char buf[1024];
     char *bp;
     RawKey *pressedkey;
     int squish;
 
+    count++;
     squish = 0;
 
     /* identify */
@@ -158,21 +203,22 @@ XkbSquishPressByModifierSide(DeviceEvent *event) {
     }
 
     /* squish interesting keys only */
-    if (!pressedkey)
+    if (!pressedkey || pressedkey->ignore)
         return 0;
 
     /* decide */
     bp = buf;
     for (int i = 0; i < LENGTH(modifierkeys); i++) {
-        if (modifierkeys[i].pressed && modifierkeys[i].side == pressedkey->side) {
-            bp += sprintf(bp, " %u,%s", modifierkeys[i].keycode, modifierkeys[i].desc);
+        if (modifierkeys[i].pressed && modifierkeys[i].side == pressedkey->side && !modifierkeys[i].ignore) {
+            bp += sprintf(bp, " %u %s", modifierkeys[i].keycode, modifierkeys[i].desc);
             squish = 1;
         }
     }
 
     /* log */
-    if (squish) {
-        fprintf(stderr, "Squishing %u,%s%s\n", pressedkey->keycode, pressedkey->desc, buf);
+    if (squish && logfile) {
+        fprintf(logfile, "%lu %u %s%s\n", count, pressedkey->keycode, pressedkey->desc, buf);
+        fflush(logfile);
     }
 
     return squish;

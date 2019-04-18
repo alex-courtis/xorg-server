@@ -646,10 +646,13 @@ extern _X_EXPORT void XkbProcessKeyboardEvent(DeviceEvent * /* event */ ,
                                               DeviceIntPtr      /* keybd */
     );
 
-extern _X_EXPORT void XkbTrackModifierState(DeviceEvent * /* event */
+extern _X_INTERNAL void XkbSquishInit(void
     );
 
-extern _X_EXPORT Bool XkbSquishPressByModifierSide(DeviceEvent * /* event */
+extern _X_INTERNAL void XkbTrackModifierState(DeviceEvent * /* event */
+    );
+
+extern _X_INTERNAL Bool XkbSquishPressByModifierSide(DeviceEvent * /* event */
     );
 
 extern _X_EXPORT void XkbHandleActions(DeviceIntPtr /* dev */ ,
