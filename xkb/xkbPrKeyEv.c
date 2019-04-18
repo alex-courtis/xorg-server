@@ -41,6 +41,143 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <ctype.h>
 #include "events.h"
 
+#define LENGTH(X) (sizeof X / sizeof X[0])
+
+enum Side {
+    LEFT = 0,
+    RIGHT = 1,
+};
+
+typedef struct RawKey {
+    const char *desc;
+    uint32_t keycode;
+    enum Side side;
+    int pressed;
+} RawKey;
+
+static RawKey modifierkeys[] = {
+
+        /* R4 */
+        {"SHIFT", 50,  LEFT},
+        {"SHIFT", 62,  RIGHT},
+
+        /* R5 */
+        {"CTRL",  37,  LEFT},
+        {"ALT",   64,  LEFT},
+        {"SUPER", 133, LEFT},
+        {"SUPER", 134, RIGHT},
+        {"ALT",   108, RIGHT},
+        {"CTRL",  105, RIGHT},
+};
+
+static RawKey squishablekeys[] = {
+
+        /* R1 */
+        {"ESC",       9,  LEFT},
+        {"1",         10, LEFT},
+        {"2",         11, LEFT},
+        {"3",         12, LEFT},
+        {"4",         13, LEFT},
+        {"5",         14, LEFT},
+        {"6",         15, LEFT},
+        {"7",         16, RIGHT},
+        {"8",         17, RIGHT},
+        {"9",         18, RIGHT},
+        {"0",         19, RIGHT},
+        {"MINUS",     20, RIGHT},
+        {"EQUALS",    21, RIGHT},
+        {"BACKSPACE", 22, RIGHT},
+        {"GRAVE",     49, RIGHT},
+
+        /* R2 */
+        {"TAB",       23, LEFT},
+        {"Q",         24, LEFT},
+        {"W",         25, LEFT},
+        {"E",         26, LEFT},
+        {"R",         27, LEFT},
+        {"T",         28, LEFT},
+        {"Y",         29, RIGHT},
+        {"U",         30, RIGHT},
+        {"I",         31, RIGHT},
+        {"O",         32, RIGHT},
+        {"P",         33, RIGHT},
+        {"BRACE_L",   34, RIGHT},
+        {"BRACE_R",   35, RIGHT},
+        {"BACKSLASH", 51, RIGHT},
+
+        /* R3 */
+        {"A",         38, LEFT},
+        {"S",         39, LEFT},
+        {"D",         40, LEFT},
+        {"F",         41, LEFT},
+        {"G",         42, LEFT},
+        {"H",         43, RIGHT},
+        {"J",         44, RIGHT},
+        {"K",         45, RIGHT},
+        {"L",         46, RIGHT},
+        {"SEMICOLON", 47, RIGHT},
+        {"QUOTE",     48, RIGHT},
+        {"ENTER",     36, RIGHT},
+
+        /* R4 */
+        {"Z",         52, LEFT},
+        {"X",         53, LEFT},
+        {"C",         54, LEFT},
+        {"V",         55, LEFT},
+        {"B",         56, LEFT},
+        {"N",         57, RIGHT},
+        {"M",         58, RIGHT},
+        {"PERIOD",    60, RIGHT},
+        {"SLASH",     61, RIGHT},
+};
+
+void
+XkbTrackModifierState(DeviceEvent *event) {
+    for (int i = 0; i < LENGTH(modifierkeys); i++)
+        if (modifierkeys[i].keycode == event->detail.key)
+            modifierkeys[i].pressed = event->type == ET_KeyPress;
+}
+
+Bool
+XkbSquishPressByModifierSide(DeviceEvent *event) {
+    static char buf[1024];
+
+    char *bp;
+    RawKey *pressedkey;
+    int squish;
+
+    squish = 0;
+
+    /* identify */
+    pressedkey = 0;
+    for (int i = 0; i < LENGTH(squishablekeys); i++) {
+        if (squishablekeys[i].keycode == event->detail.key) {
+            pressedkey = &squishablekeys[i];
+            break;
+        }
+    }
+
+    /* squish interesting keys only */
+    if (!pressedkey)
+        return 0;
+
+    /* decide */
+    bp = buf;
+    for (int i = 0; i < LENGTH(modifierkeys); i++) {
+        if (modifierkeys[i].pressed && modifierkeys[i].side == pressedkey->side) {
+            bp += sprintf(bp, " %u,%s", modifierkeys[i].keycode, modifierkeys[i].desc);
+            squish = 1;
+        }
+    }
+
+    /* log */
+    if (squish) {
+        fprintf(stderr, "Squishing %u,%s%s\n", pressedkey->keycode, pressedkey->desc, buf);
+    }
+
+    return squish;
+}
+
 /***====================================================================***/
 
 void
@@ -182,6 +319,16 @@ ProcessKeyboardEvent(InternalEvent *ev, DeviceIntPtr keybd)
     }
 
     xkbi = keyc->xkbInfo;
+
+    /* only pay attention to the master, which aggregates all keyboards and allows use of the statics to track state */
+    if (keybd->type == MASTER_KEYBOARD) {
+        XkbTrackModifierState(event);
+
+        /* squish presses */
+        if (is_press && XkbSquishPressByModifierSide(event)) {
+            return;
+        }
+    }
 
     /* If AccessX filters are active, then pass it through to
      * AccessXFilter{Press,Release}Event; else, punt to
