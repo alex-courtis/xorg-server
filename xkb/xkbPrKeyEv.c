@@ -75,61 +75,62 @@ static RawKey squishablekeys[] = {
 
         /* R1 */
         {"ESC",       9,  LEFT},
-        {"1",         10, LEFT},
-        {"2",         11, LEFT},
-        {"3",         12, LEFT},
-        {"4",         13, LEFT},
-        {"5",         14, LEFT},
-        {"6",         15, LEFT},
-        {"7",         16, RIGHT},
-        {"8",         17, RIGHT},
-        {"9",         18, RIGHT},
-        {"0",         19, RIGHT},
-        {"MINUS",     20, RIGHT},
-        {"EQUALS",    21, RIGHT},
-        {"BACKSPACE", 22, RIGHT},
-        {"GRAVE",     49, RIGHT},
+        {"1",         10, LEFT},    // &
+        {"2",         11, LEFT},    // [
+        {"3",         12, LEFT},    // {
+        {"4",         13, LEFT},    // }
+        {"5",         14, LEFT},    // (
+        {"6",         15, LEFT},    // =
+        {"7",         16, RIGHT},   // *
+        {"8",         17, RIGHT},   // )
+        {"9",         18, RIGHT},   // +
+        {"0",         19, RIGHT},   // ]
+        {"MINUS",     20, RIGHT},   // !
+        {"EQUALS",    21, RIGHT},   // #
+        {"BACKSLASH", 51, RIGHT},
+        {"GRAVE",     49, RIGHT},   // $
 
         /* R2 */
         {"TAB",       23, LEFT},
-        {"Q",         24, LEFT},
-        {"W",         25, LEFT},
-        {"E",         26, LEFT},
-        {"R",         27, LEFT},
-        {"T",         28, LEFT},
-        {"Y",         29, RIGHT},
-        {"U",         30, RIGHT},
-        {"I",         31, RIGHT},
-        {"O",         32, RIGHT},
-        {"P",         33, RIGHT},
-        {"BRACE_L",   34, RIGHT},
-        {"BRACE_R",   35, RIGHT},
-        {"BACKSLASH", 51, RIGHT},
+        {"Q",         24, LEFT},    // ;
+        {"W",         25, LEFT},    // ,
+        {"E",         26, LEFT},    // .
+        {"R",         27, LEFT},    // p
+        {"T",         28, LEFT},    // y
+        {"Y",         29, RIGHT},   // f
+        {"U",         30, RIGHT},   // g
+        {"I",         31, RIGHT},   // c
+        {"O",         32, RIGHT},   // r
+        {"P",         33, RIGHT},   // l
+        {"BRACE_L",   34, RIGHT},   // /
+        {"BRACE_R",   35, RIGHT},   // @
+        {"BACKSPACE", 22, RIGHT},
 
         /* R3 */
-        {"A",         38, LEFT},
-        {"S",         39, LEFT},
-        {"D",         40, LEFT},
-        {"F",         41, LEFT},
-        {"G",         42, LEFT},
-        {"H",         43, RIGHT},
-        {"J",         44, RIGHT},
-        {"K",         45, RIGHT},
-        {"L",         46, RIGHT},
-        {"SEMICOLON", 47, RIGHT},
-        {"QUOTE",     48, RIGHT},
+        {"A",         38, LEFT},    // a
+        {"S",         39, LEFT},    // o
+        {"D",         40, LEFT},    // e
+        {"F",         41, LEFT},    // u
+        {"G",         42, LEFT},    // i
+        {"H",         43, RIGHT},   // d
+        {"J",         44, RIGHT},   // h
+        {"K",         45, RIGHT},   // t
+        {"L",         46, RIGHT},   // n
+        {"SEMICOLON", 47, RIGHT},   // s
+        {"QUOTE",     48, RIGHT},   // -
         {"ENTER",     36, RIGHT},
 
         /* R4 */
-        {"Z",         52, LEFT},
-        {"X",         53, LEFT},
-        {"C",         54, LEFT},
-        {"V",         55, LEFT},
-        {"B",         56, LEFT},
-        {"N",         57, RIGHT},
-        {"M",         58, RIGHT},
-        {"PERIOD",    60, RIGHT},
-        {"SLASH",     61, RIGHT},
+        {"Z",         52, LEFT},    // '
+        {"X",         53, LEFT},    // q
+        {"C",         54, LEFT},    // j
+        {"V",         55, LEFT},    // k
+        {"B",         56, LEFT},    // x
+        {"N",         57, RIGHT},   // b
+        {"M",         58, RIGHT},   // m
+        {"COMMA",     59, RIGHT},   // w
+        {"PERIOD",    60, RIGHT},   // v
+        {"SLASH",     61, RIGHT},   // z
 };
 
 static FILE *logfile;
