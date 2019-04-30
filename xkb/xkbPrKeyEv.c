@@ -59,78 +59,80 @@ typedef struct RawKey {
 static RawKey modifierkeys[] = {
 
         /* R4 */
-        {"SHIFT", 50,  LEFT},
-        {"SHIFT", 62,  RIGHT},
+        {"SHI", 50,     LEFT},
+        {"SHI", 62,     RIGHT},
 
         /* R5 */
-        {"CTRL",  37,  LEFT},
-        {"ALT",   64,  LEFT},
-        {"SUPER", 133, LEFT},
-        {"SUPER", 134, RIGHT},
-        {"ALT",   108, RIGHT},
-        {"CTRL",  105, RIGHT},
+        {"CTR", 37,     LEFT},
+        {"ALT", 64,     LEFT},
+        {"SUP", 133,    LEFT},
+        {"SUP", 134,    RIGHT},
+        {"ALT", 108,    RIGHT},
+        {"CTR", 105,    RIGHT},
 };
 
 static RawKey squishablekeys[] = {
 
+        /* R0 */
+     /* {"ESC",       9,  LEFT}, */
+
         /* R1 */
-        {"ESC",       9,  LEFT},
-        {"1",         10, LEFT},    // &
-        {"2",         11, LEFT},    // [
-        {"3",         12, LEFT},    // {
-        {"4",         13, LEFT},    // }
-        {"5",         14, LEFT},    // (
-        {"6",         15, LEFT},    // =
-        {"7",         16, RIGHT},   // *
-        {"8",         17, RIGHT},   // )
-        {"9",         18, RIGHT},   // +
-        {"0",         19, RIGHT},   // ]
-        {"MINUS",     20, RIGHT},   // !
-        {"EQUALS",    21, RIGHT},   // #
-        {"BACKSLASH", 51, RIGHT},
-        {"GRAVE",     49, RIGHT},   // $
+        {"$",         49, LEFT},
+        {"&",         10, LEFT},
+        {"[",         11, LEFT},
+        {"{",         12, LEFT},
+        {"}",         13, LEFT},
+        {"(",         14, LEFT},
+        {"=",         15, LEFT},
+        {"*",         16, RIGHT},
+        {")",         17, RIGHT},
+        {"+",         18, RIGHT},
+        {"]",         19, RIGHT},
+        {"!",         20, RIGHT},
+        {"#",         21, RIGHT},
+     /* {"BACKSPACE", 22, RIGHT}, */
 
         /* R2 */
-        {"TAB",       23, LEFT},
-        {"Q",         24, LEFT},    // ;
-        {"W",         25, LEFT},    // ,
-        {"E",         26, LEFT},    // .
-        {"R",         27, LEFT},    // p
-        {"T",         28, LEFT},    // y
-        {"Y",         29, RIGHT},   // f
-        {"U",         30, RIGHT},   // g
-        {"I",         31, RIGHT},   // c
-        {"O",         32, RIGHT},   // r
-        {"P",         33, RIGHT},   // l
-        {"BRACE_L",   34, RIGHT},   // /
-        {"BRACE_R",   35, RIGHT},   // @
-        {"BACKSPACE", 22, RIGHT},
+     /* {"TAB",       23, LEFT}, */
+        {";",         24, LEFT},
+        {",",         25, LEFT},
+        {".",         26, LEFT},
+        {"p",         27, LEFT},
+        {"y",         28, LEFT},
+        {"f",         29, RIGHT},
+        {"g",         30, RIGHT},
+        {"c",         31, RIGHT},
+        {"r",         32, RIGHT},
+        {"l",         33, RIGHT},
+        {"/",         34, RIGHT},
+        {"@",         35, RIGHT},
+        {"\\",        51, RIGHT},
 
         /* R3 */
-        {"A",         38, LEFT},    // a
-        {"S",         39, LEFT},    // o
-        {"D",         40, LEFT},    // e
-        {"F",         41, LEFT},    // u
-        {"G",         42, LEFT},    // i
-        {"H",         43, RIGHT},   // d
-        {"J",         44, RIGHT},   // h
-        {"K",         45, RIGHT},   // t
-        {"L",         46, RIGHT},   // n
-        {"SEMICOLON", 47, RIGHT},   // s
-        {"QUOTE",     48, RIGHT},   // -
-        {"ENTER",     36, RIGHT},
+        {"a",         38, LEFT},
+        {"o",         39, LEFT},
+        {"e",         40, LEFT},
+        {"u",         41, LEFT},
+        {"i",         42, LEFT},
+        {"d",         43, RIGHT},
+        {"h",         44, RIGHT},
+        {"t",         45, RIGHT},
+        {"n",         46, RIGHT},
+        {"s",         47, RIGHT},
+        {"-",         48, RIGHT},
+     /* {"ENTER",     36, RIGHT}, */
 
         /* R4 */
-        {"Z",         52, LEFT},    // '
-        {"X",         53, LEFT},    // q
-        {"C",         54, LEFT},    // j
-        {"V",         55, LEFT},    // k
-        {"B",         56, LEFT},    // x
-        {"N",         57, RIGHT},   // b
-        {"M",         58, RIGHT},   // m
-        {"COMMA",     59, RIGHT},   // w
-        {"PERIOD",    60, RIGHT},   // v
-        {"SLASH",     61, RIGHT},   // z
+        {"'",         52, LEFT},
+        {"q",         53, LEFT},
+        {"j",         54, LEFT},
+        {"k",         55, LEFT},
+        {"x",         56, LEFT},
+        {"b",         57, RIGHT},
+        {"m",         58, RIGHT},
+        {"w",         59, RIGHT},
+        {"v",         60, RIGHT},
+        {"z",         61, RIGHT},
 };
 
 static FILE *logfile;
